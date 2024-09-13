@@ -1,6 +1,7 @@
 package com.maciejsusala.task_inksolutions.service.impl;
 
 import com.maciejsusala.task_inksolutions.model.NewsArticle;
+import com.maciejsusala.task_inksolutions.service.CsvNewsReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -13,10 +14,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Service
-public class CsvNewsReader {
+public class CsvNewsReaderImpl implements CsvNewsReader {
 
-    private static final Logger logger = LoggerFactory.getLogger(CsvNewsReader.class);
+    private static final Logger logger = LoggerFactory.getLogger(CsvNewsReaderImpl.class);
 
+    @Override
     public List<NewsArticle> readNewsFromCsv() {
         List<NewsArticle> articles = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ClassPathResource("news.csv").getInputStream()))) {

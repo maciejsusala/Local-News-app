@@ -32,6 +32,7 @@ public class NewsProcessorServiceImpl implements NewsProcessorService {
         this.openAiService = new OpenAiService(openAiApiKey);
     }
 
+    @Override
     @KafkaListener(topics = "raw-news")
     public void processNews(NewsArticle newsArticle) {
         Mono.fromCallable(() -> processWithGpt4(newsArticle))
