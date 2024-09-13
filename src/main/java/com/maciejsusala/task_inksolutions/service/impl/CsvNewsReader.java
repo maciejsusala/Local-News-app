@@ -1,43 +1,45 @@
 package com.maciejsusala.task_inksolutions.service.impl;
 
 import com.maciejsusala.task_inksolutions.model.NewsArticle;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class CsvNewsReader {
 
-    private static final String CSV_FILE_PATH = "newsArticles.csv";
+    private static final Logger logger = LoggerFactory.getLogger(CsvNewsReader.class);
 
     public List<NewsArticle> readNewsFromCsv() {
-        List<NewsArticle> newsArticles = new ArrayList<>();
-
-        try (Reader reader = new FileReader(CSV_FILE_PATH);
-             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader("KEYWORDS", "SUMMARY", "TEXT", "TITLE", "URL").withSkipHeaderRecord())) {
-
-            for (CSVRecord csvRecord : csvParser) {
-                String title = csvRecord.get("TITLE");
-                String content = csvRecord.get("TEXT");
-
-                NewsArticle newsArticle = NewsArticle.builder()
-                        .title(title)
-                        .content(content)
-                        .build();
-
-                newsArticles.add(newsArticle);
+        List<NewsArticle> articles = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ClassPathResource("news.csv").getInputStream()))) {
+            Stream<String> lines = reader.lines().skip(1); // Skip header
+            List<String> lineList = lines.toList();
+            for (int i = 0; i < lineList.size(); i++) {
+                logger.info("Adding article number: {}", i + 1);
+                articles.add(mapToArticle(lineList.get(i)));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("Failed to import news", e);
+            throw new RuntimeException("Failed to import news", e);
         }
+        return articles;
+    }
 
-        return newsArticles;
+    private NewsArticle mapToArticle(String line) {
+        String[] fields = line.split(",");
+        NewsArticle newsArticle = new NewsArticle();
+        newsArticle.setTitle(fields[0]);
+        newsArticle.setContent(fields[1]);
+        newsArticle.setLocal(false);
+        newsArticle.setLocation("Global");
+        return newsArticle;
     }
 }
