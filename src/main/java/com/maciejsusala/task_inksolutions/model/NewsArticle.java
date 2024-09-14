@@ -23,12 +23,12 @@ public class NewsArticle implements Serializable {
     private String title;
 
     @JsonProperty("content")
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Column(nullable = false)
     private boolean isLocal;
 
     @Column
-    private String location;
+    private String city;
 }

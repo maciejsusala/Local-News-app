@@ -3,19 +3,18 @@ package com.maciejsusala.task_inksolutions.service.impl;
 import com.maciejsusala.task_inksolutions.model.NewsArticle;
 import com.maciejsusala.task_inksolutions.service.CsvNewsReader;
 import com.maciejsusala.task_inksolutions.service.NewsIngestionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class NewsIngestionServiceImpl implements NewsIngestionService {
 
     private final KafkaTemplate<String, NewsArticle> kafkaTemplate;
     private final CsvNewsReader csvNewsReader;
-    private final static Logger logger = LoggerFactory.getLogger(NewsIngestionServiceImpl.class);
 
 
     public NewsIngestionServiceImpl(KafkaTemplate<String, NewsArticle> kafkaTemplate, CsvNewsReader csvNewsReader) {
@@ -30,6 +29,6 @@ public class NewsIngestionServiceImpl implements NewsIngestionService {
             kafkaTemplate.send("raw-news", article);
         }
 
-        logger.info("Ingested {} news articles", articles.size());
+        log.info("Ingested {} news articles", articles.size());
     }
 }

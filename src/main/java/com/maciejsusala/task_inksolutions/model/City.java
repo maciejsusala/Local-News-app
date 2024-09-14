@@ -25,9 +25,13 @@ public class City {
     @Column(name = "county_name", nullable = false)
     private String countyName;
 
+    // Latitude and longitude information may be useful when retrieving the user's actual location in the future.
     @Column(nullable = false)
     private double lat;
 
     @Column(nullable = false)
     private double lng;
+
+
+
 }

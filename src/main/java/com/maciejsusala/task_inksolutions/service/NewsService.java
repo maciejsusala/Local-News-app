@@ -4,6 +4,7 @@ import com.maciejsusala.task_inksolutions.model.NewsArticle;
 
 import java.util.List;
 
-public interface NewsStorageService {
-    void storeNews(List<NewsArticle> newsArticles);
+public interface NewsService {
+
+    List<NewsArticle> getNewsByCity(String city);
 }

@@ -5,5 +5,5 @@ import com.maciejsusala.task_inksolutions.model.NewsArticle;
 import java.util.List;
 
 public interface CsvNewsReader {
-    public List<NewsArticle> readNewsFromCsv();
+    List<NewsArticle> readNewsFromCsv();
 }

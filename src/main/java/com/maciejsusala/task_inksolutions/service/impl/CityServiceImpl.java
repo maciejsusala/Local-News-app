@@ -3,8 +3,7 @@ package com.maciejsusala.task_inksolutions.service.impl;
 import com.maciejsusala.task_inksolutions.model.City;
 import com.maciejsusala.task_inksolutions.repository.CityRepository;
 import com.maciejsusala.task_inksolutions.service.CityService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +14,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Service
+@Slf4j
 public class CityServiceImpl implements CityService {
-
-    private static final Logger logger = LoggerFactory.getLogger(CityServiceImpl.class);
 
     private final CityRepository cityRepository;
 
@@ -34,7 +32,7 @@ public class CityServiceImpl implements CityService {
             Stream<String> lines = reader.lines().skip(1); // Skip header
             List<String> lineList = lines.toList();
             for (int i = 0; i < lineList.size(); i++) {
-                logger.info("Adding city number: {}", i + 1);
+                log.info("Adding city number: {}", i + 1);
                 cities.add(mapToCity(lineList.get(i)));
                 if (cities.size() == BATCH_SIZE) {
                     cityRepository.saveAll(cities);
@@ -45,7 +43,7 @@ public class CityServiceImpl implements CityService {
                 cityRepository.saveAll(cities);
             }
         } catch (Exception e) {
-            logger.error("Failed to import cities", e);
+            log.error("Failed to import cities", e);
             throw new RuntimeException("Failed to import cities", e);
         }
     }
